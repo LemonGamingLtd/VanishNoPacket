@@ -24,6 +24,7 @@ import com.destroystokyo.paper.event.player.PlayerPickupExperienceEvent;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerAttemptPickupItemEvent;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.kitteh.vanish.VanishPerms;
 import org.kitteh.vanish.VanishPlugin;
@@ -67,6 +68,13 @@ public final class ListenPaper implements Listener {
     @EventHandler(ignoreCancelled = true)
     public void onProjectileCollide(@NonNull ProjectileCollideEvent event) {
         if ((event.getCollidedWith() instanceof Player) && this.plugin.getManager().isVanished((Player) event.getCollidedWith())) {
+            event.setCancelled(true);
+        }
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    public void onPlayerAttemptPickupItem(@NonNull PlayerAttemptPickupItemEvent event) {
+        if (this.plugin.getManager().isVanished(event.getPlayer())) {
             event.setCancelled(true);
         }
     }
