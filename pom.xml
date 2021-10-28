@@ -160,4 +160,15 @@
             </plugin>
         </plugins>
     </build>
+
+    <distributionManagement>
+        <snapshotRepository>
+            <id>lemongaming-repo</id>
+            <url>https://repo.lemongaming.ltd/repository/maven-snapshots/</url>
+        </snapshotRepository>
+        <repository>
+            <id>lemongaming-repo</id>
+            <url>https://repo.lemongaming.ltd/repository/maven-releases/</url>
+        </repository>
+    </distributionManagement>
 </project>
