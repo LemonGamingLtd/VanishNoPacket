@@ -46,11 +46,13 @@ public final class VanishUser {
         this.noHunger = player.hasPermission("vanish.nohunger");
         this.noChat = player.hasPermission("vanish.nochat");
         this.silentChestReads = player.hasPermission("vanish.silentchests");
-        this.smoke = player.hasPermission("vanish.effects.smoke");
-        this.flames = player.hasPermission("vanish.effects.flames");
-        this.explode = player.hasPermission("vanish.effects.explode");
-        this.lightning = player.hasPermission("vanish.effects.lightning");
-        this.bats = player.hasPermission("vanish.effects.bats");
+
+        // force disable annoying effects
+        // this.smoke = player.hasPermission("vanish.effects.smoke");
+        // this.flames = player.hasPermission("vanish.effects.flames");
+        // this.explode = player.hasPermission("vanish.effects.explode");
+        // this.lightning = player.hasPermission("vanish.effects.lightning");
+        // this.bats = player.hasPermission("vanish.effects.bats");
     }
 
     public boolean getEffectBats() {
