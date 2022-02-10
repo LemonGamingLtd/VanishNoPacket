@@ -477,7 +477,7 @@ public final class VanishManager {
         for (final Player player : this.plugin.getServer().getOnlinePlayers()) {
             for (final Player player2 : this.plugin.getServer().getOnlinePlayers()) {
                 if ((player != null) && (player2 != null) && !player.equals(player2)) {
-                    player.showPlayer(this.plugin, player2);
+                    showPlayer(player2, player);
                 }
             }
         }
