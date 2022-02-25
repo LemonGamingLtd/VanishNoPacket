@@ -10,6 +10,7 @@ on:
 
 jobs:
   build:
+    runs-on: ubuntu-latest
     uses: LemonGamingLtd/workflows/.github/workflows/maven-build.yml@main
     secrets:
       DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
