@@ -11,10 +11,11 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    uses: LemonGamingLtd/workflows/.github/workflows/maven-build.yml@main
-    secrets:
-      DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
-      MAVEN_SETTINGS: ${{ secrets.MAVEN_SETTINGS }}
-    with:
-      artifact_folders: |
-        .
+    steps:
+      - uses: LemonGamingLtd/workflows/.github/workflows/maven-build.yml@main
+        secrets:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+          MAVEN_SETTINGS: ${{ secrets.MAVEN_SETTINGS }}
+        with:
+          artifact_folders: |
+            .
