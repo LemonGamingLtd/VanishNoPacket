@@ -96,7 +96,8 @@ public final class ListenPlayerOther implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerInteract(@NonNull PlayerInteractEvent event) {
         final Player player = event.getPlayer();
-        if ((event.getAction() == Action.RIGHT_CLICK_BLOCK) && (event.getClickedBlock() != null) && (event.getClickedBlock().getState() instanceof Container container) && !this.plugin.chestFakeInUse(player.getName()) && !player.isSneaking() && this.plugin.getManager().isVanished(event.getPlayer()) && VanishPerms.canReadChestsSilently(event.getPlayer())) {
+        if ((event.getAction() == Action.RIGHT_CLICK_BLOCK) && (event.getClickedBlock() != null) && (event.getClickedBlock().getState() instanceof Container) && !this.plugin.chestFakeInUse(player.getName()) && !player.isSneaking() && this.plugin.getManager().isVanished(event.getPlayer()) && VanishPerms.canReadChestsSilently(event.getPlayer())) {
+            Container container = (Container) event.getClickedBlock().getState();
             if (container instanceof EnderChest && this.plugin.getServer().getPluginManager().isPluginEnabled("EnderChestPlus") && VanishPerms.canNotInteract(player)) {
                 event.setCancelled(true);
                 return;
