@@ -22,6 +22,9 @@ import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockState;
+import org.bukkit.block.Chest;
 import org.bukkit.block.Container;
 import org.bukkit.block.EnderChest;
 import org.bukkit.entity.Player;
@@ -82,7 +85,8 @@ public final class ListenPlayerOther implements Listener {
 
     @EventHandler(ignoreCancelled = true)
     public void onFoodChange(@NonNull FoodLevelChangeEvent event) {
-        if (event.getEntity() instanceof final Player player) {
+        if (event.getEntity() instanceof Player) {
+            final Player player = (Player) event.getEntity();
             if (this.plugin.getManager().isVanished(player) && VanishPerms.canNotHunger(player)) {
                 event.setCancelled(true);
             }
@@ -97,7 +101,33 @@ public final class ListenPlayerOther implements Listener {
                 event.setCancelled(true);
                 return;
             }
-            Inventory inventory;
+            final Block block = event.getClickedBlock();
+            Inventory inventory = null;
+            final BlockState blockState = block.getState();
+            boolean fake = false;
+            switch (block.getType()) {
+                case TRAPPED_CHEST:
+                case CHEST:
+                    final Chest chest = (Chest) blockState;
+                    inventory = this.plugin.getServer().createInventory(player, chest.getInventory().getSize());
+                    inventory.setContents(chest.getInventory().getContents());
+                    fake = true;
+                    break;
+                case ENDER_CHEST:
+                    if (this.plugin.getServer().getPluginManager().isPluginEnabled("EnderChestPlus") && VanishPerms.canNotInteract(player)) {
+                        event.setCancelled(true);
+                        return;
+                    }
+                    inventory = player.getEnderChest();
+                    break;
+            }
+            if (inventory == null && blockState instanceof Container) {
+                inventory = ((Container) blockState).getInventory();
+            }
+            if (inventory != null) {
+                event.setCancelled(true);
+                return;
+            }
             if (container.getInventory() instanceof DoubleChestInventory) {
                 if (this.plugin.isPaper()) {
                     inventory = this.plugin.getServer().createInventory(player, 54, Component.text("Silently opened inventory"));

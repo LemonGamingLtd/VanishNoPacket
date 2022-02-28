@@ -38,7 +38,8 @@ public final class ListenToYourHeart implements Listener {
     public void badReview(@NonNull HangingBreakEvent criticism) {
         if (criticism instanceof HangingBreakByEntityEvent) {
             final Entity critic = ((HangingBreakByEntityEvent) criticism).getRemover();
-            if (critic instanceof final Player arrogantFool) {
+            if (critic instanceof Player) {
+                final Player arrogantFool = (Player) critic;
                 if (this.plugin.getManager().isVanished(arrogantFool) && VanishPerms.canNotInteract(arrogantFool)) {
                     criticism.setCancelled(true);
                 }
