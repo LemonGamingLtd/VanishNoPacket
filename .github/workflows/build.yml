@@ -15,5 +15,6 @@ jobs:
       DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
       MAVEN_SETTINGS: ${{ secrets.MAVEN_SETTINGS }}
     with:
+      runs_on: ubuntu-latest
       artifact_folders: |
         .
