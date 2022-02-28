@@ -32,6 +32,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.block.EntityBlockFormEvent;
 import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerBucketFillEvent;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
@@ -81,8 +82,10 @@ public final class ListenPlayerOther implements Listener {
 
     @EventHandler(ignoreCancelled = true)
     public void onFoodChange(@NonNull FoodLevelChangeEvent event) {
-        if (event.getEntity() instanceof final Player player && this.plugin.getManager().isVanished(player) && VanishPerms.canNotHunger(player)) {
-            event.setCancelled(true);
+        if (event.getEntity() instanceof final Player player) {
+            if (this.plugin.getManager().isVanished(player) && VanishPerms.canNotHunger(player)) {
+                event.setCancelled(true);
+            }
         }
     }
 
@@ -124,7 +127,10 @@ public final class ListenPlayerOther implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onPlayerPickupItem(@NonNull EntityPickupItemEvent event) {
-        if (event.getEntity() instanceof Player player && this.plugin.getManager().isVanished(player) && VanishPerms.canNotPickUp(player)) {
+        if (!(event.getEntity() instanceof Player)) {
+            return;
+        }
+        if (this.plugin.getManager().isVanished((Player) event.getEntity()) && VanishPerms.canNotPickUp((Player) event.getEntity())) {
             event.setCancelled(true);
         }
     }
@@ -186,7 +192,7 @@ public final class ListenPlayerOther implements Listener {
 
     @EventHandler(ignoreCancelled = true)
     public void onEntityBlockForm(@NonNull EntityBlockFormEvent event) {
-        if ((event.getEntity() instanceof Player player) && this.plugin.getManager().isVanished(player)) {
+        if ((event.getEntity() instanceof Player) && this.plugin.getManager().isVanished((Player) event.getEntity())) {
             event.setCancelled(true);
         }
     }
