@@ -1,4 +1,4 @@
-commit-hash: ${git.commit.id.describe-short}
+commit-hash: "${git.commit.id.describe-short}"
 git-repo: LemonGamingLtd/VanishNoPacket
 name: VanishNoPacket
 main: org.kitteh.vanish.VanishPlugin
