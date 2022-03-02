@@ -17,10 +17,10 @@
  */
 package org.kitteh.vanish.listeners;
 
+import ltd.lemongaming.xseries.XMaterial;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Chest;
@@ -34,7 +34,6 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.block.EntityBlockFormEvent;
 import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
-import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerBucketFillEvent;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
@@ -47,8 +46,6 @@ import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.bukkit.event.raid.RaidTriggerEvent;
 import org.bukkit.inventory.DoubleChestInventory;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.persistence.PersistentDataContainer;
-import org.bukkit.persistence.PersistentDataType;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.kitteh.vanish.Settings;
 import org.kitteh.vanish.VanishPerms;
@@ -60,12 +57,10 @@ import java.util.UUID;
 
 public final class ListenPlayerOther implements Listener {
     private final VanishPlugin plugin;
-    private final NamespacedKey lastGameModeNamespacedKey;
     private final Map<UUID, Long> playersAndLastTimeSneaked = new HashMap<>();
 
     public ListenPlayerOther(@NonNull VanishPlugin instance) {
         this.plugin = instance;
-        this.lastGameModeNamespacedKey = new NamespacedKey(instance, "LastGameMode");
     }
 
     @EventHandler(ignoreCancelled = true)
@@ -140,7 +135,7 @@ public final class ListenPlayerOther implements Listener {
             event.setCancelled(true);
         } else if (this.plugin.getManager().isVanished(player) && VanishPerms.canNotInteract(player)) {
             event.setCancelled(true);
-        } else if ((event.getAction() == Action.PHYSICAL) && (event.getClickedBlock() != null) && (event.getClickedBlock().getType() == Material.FARMLAND) && this.plugin.getManager().isVanished(player) && VanishPerms.canNotTrample(player)) {
+        } else if ((event.getAction() == Action.PHYSICAL) && (event.getClickedBlock() != null) && XMaterial.matchAnyXMaterial(event.getClickedBlock().getType(), XMaterial.FARMLAND) && this.plugin.getManager().isVanished(player) && VanishPerms.canNotTrample(player)) {
             event.setCancelled(true);
         }
     }
@@ -224,11 +219,9 @@ public final class ListenPlayerOther implements Listener {
             if (!Settings.getDoubleSneakDuringVanishSwitchesGameModeMessage().isBlank()) { //In case the user doesn't want a message to be sent at all
                 player.sendMessage(ChatColor.translateAlternateColorCodes('&', Settings.getDoubleSneakDuringVanishSwitchesGameModeMessage()));
             }
-            final PersistentDataContainer persistentDataContainer = player.getPersistentDataContainer();
             if (player.getGameMode() == GameMode.SPECTATOR) {
-                player.setGameMode(GameMode.valueOf(persistentDataContainer.getOrDefault(this.lastGameModeNamespacedKey, PersistentDataType.STRING, "CREATIVE")));
+                player.setGameMode(GameMode.SURVIVAL);
             } else {
-                persistentDataContainer.set(this.lastGameModeNamespacedKey, PersistentDataType.STRING, player.getGameMode().name());
                 player.setGameMode(GameMode.SPECTATOR);
             }
             this.playersAndLastTimeSneaked.remove(player.getUniqueId());
