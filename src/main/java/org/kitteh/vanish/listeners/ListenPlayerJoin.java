@@ -41,7 +41,7 @@ public final class ListenPlayerJoin implements Listener {
         event.getPlayer().setMetadata("vanished", new LazyMetadataValue(this.plugin, CacheStrategy.NEVER_CACHE, new VanishCheck(this.plugin.getManager(), event.getPlayer().getName())));
         this.plugin.getManager().resetSeeing(event.getPlayer());
         if (VanishPerms.joinVanished(event.getPlayer())) {
-            this.plugin.getManager().toggleVanishQuiet(event.getPlayer(), false);
+            this.plugin.getManager().vanish(event.getPlayer(), true, false);
             this.plugin.hooksVanish(event.getPlayer());
         }
         this.plugin.hooksJoin(event.getPlayer());
