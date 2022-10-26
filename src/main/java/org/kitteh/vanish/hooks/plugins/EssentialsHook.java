@@ -57,16 +57,12 @@ public final class EssentialsHook extends Hook {
 
     @Override
     public void onUnvanish(@NonNull Player player) {
-        if (player.hasPermission("vanish.hooks.essentials.hide")) {
-            this.setHidden(player, false);
-        }
+        this.setHidden(player, false);
     }
 
     @Override
     public void onVanish(@NonNull Player player) {
-        if (player.hasPermission("vanish.hooks.essentials.hide")) {
-            this.setHidden(player, true);
-        }
+        this.setHidden(player, true);
     }
 
     private void setHidden(@NonNull Player player, boolean hide) {
