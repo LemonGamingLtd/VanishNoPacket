@@ -17,6 +17,7 @@
  */
 package org.kitteh.vanish;
 
+import com.tcoded.folialib.FoliaLib;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -42,6 +43,9 @@ import java.io.File;
 import java.util.HashSet;
 
 public final class VanishPlugin extends JavaPlugin implements Listener {
+
+    private FoliaLib scheduler;
+
     private final HashSet<String> haveInventoriesOpen = new HashSet<>();
     private final HookManager hookManager = new HookManager(this);
     private VanishManager manager;
@@ -205,6 +209,8 @@ public final class VanishPlugin extends JavaPlugin implements Listener {
 
     @Override
     public void onEnable() {
+        scheduler = new FoliaLib(this);
+
         this.setInstance(this);
 
         // Thanks, PaperLib
@@ -302,5 +308,14 @@ public final class VanishPlugin extends JavaPlugin implements Listener {
     @SuppressWarnings("deprecation")
     private void setInstance(@Nullable VanishPlugin plugin) {
         org.kitteh.vanish.staticaccess.VanishNoPacket.setInstance(plugin);
+    }
+
+    /**
+     * Get the scheduler instance.
+     *
+     * @return {@link FoliaLib} instance.
+     */
+    public FoliaLib getScheduler() {
+        return scheduler;
     }
 }

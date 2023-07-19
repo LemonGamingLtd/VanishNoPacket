@@ -36,6 +36,8 @@ import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
+
 import org.kitteh.vanish.nms.EntityCollideAlterer;
 import org.kitteh.vanish.nms.ModernEntityCollideAlterer;
 import org.kitteh.vanish.nms.v1_8_8_EntityCollideAlterer;
@@ -105,7 +107,7 @@ public final class VanishManager {
         this.announceManipulator = new VanishAnnounceManipulator(this.plugin);
 
         this.showPlayer = new ShowPlayerHandler(this.plugin);
-        this.plugin.getServer().getScheduler().scheduleSyncRepeatingTask(this.plugin, this.showPlayer, 4, 4);
+        plugin.getScheduler().getImpl().runTimer(this.showPlayer, 250L, 250L, TimeUnit.MILLISECONDS);
 
         try {
             Class.forName("org.bukkit.NamespacedKey");
@@ -399,10 +401,10 @@ public final class VanishManager {
             batty.add(location.getWorld().spawnEntity(location, EntityType.BAT).getUniqueId());
         }
         this.bats.addAll(batty);
-        this.plugin.getServer().getScheduler().runTaskLater(this.plugin, () -> {
+        this.plugin.getScheduler().getImpl().runAtLocationLater(location, () -> {
             VanishManager.this.effectBatsCleanup(location.getWorld(), batty);
             VanishManager.this.bats.removeAll(batty);
-        }, 3 * 20);
+        }, 3L, TimeUnit.SECONDS);
     }
 
     private void effectBatsCleanup(@NonNull World world, @NonNull Set<UUID> bats) {
