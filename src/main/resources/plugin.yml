@@ -10,6 +10,7 @@ author: mbaxter
 description: Vanish for the distinguished admin
 dev-url: https://dev.bukkit.org/projects/vanish
 api-version: 1.13
+folia-supported: true
 commands:
   vanish:
     description: poof
