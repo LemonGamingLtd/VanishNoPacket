@@ -45,6 +45,7 @@ import java.util.HashSet;
 public final class VanishPlugin extends JavaPlugin implements Listener {
 
     private FoliaLib scheduler;
+    private boolean paper;
 
     private final HashSet<String> haveInventoriesOpen = new HashSet<>();
     private final HookManager hookManager = new HookManager(this);
@@ -217,6 +218,7 @@ public final class VanishPlugin extends JavaPlugin implements Listener {
         // https://github.com/PaperMC/PaperLib
         try {
             Class.forName("com.destroystokyo.paper.PaperConfig");
+            paper = true;
             this.getServer().getPluginManager().registerEvents(new ListenPaper(this), this);
         } catch (ClassNotFoundException ignored) {
             final String benefitsProperty = "paperlib.shown-benefits";
@@ -317,5 +319,9 @@ public final class VanishPlugin extends JavaPlugin implements Listener {
      */
     public FoliaLib getScheduler() {
         return scheduler;
+    }
+
+    public boolean isPaper() {
+        return paper;
     }
 }

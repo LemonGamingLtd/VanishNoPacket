@@ -17,13 +17,10 @@
  */
 package org.kitteh.vanish.listeners;
 
-import ltd.lemongaming.xseries.XMaterial;
+import net.kyori.adventure.text.Component;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockState;
-import org.bukkit.block.Chest;
 import org.bukkit.block.Container;
 import org.bukkit.block.EnderChest;
 import org.bukkit.entity.Player;
@@ -34,15 +31,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.block.EntityBlockFormEvent;
 import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
-import org.bukkit.event.player.PlayerBucketFillEvent;
-import org.bukkit.event.player.PlayerChangedWorldEvent;
-import org.bukkit.event.player.PlayerDropItemEvent;
-import org.bukkit.event.player.PlayerInteractEntityEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerPickupArrowEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.event.player.PlayerShearEntityEvent;
-import org.bukkit.event.player.PlayerToggleSneakEvent;
+import org.bukkit.event.player.*;
 import org.bukkit.event.raid.RaidTriggerEvent;
 import org.bukkit.inventory.DoubleChestInventory;
 import org.bukkit.inventory.Inventory;
@@ -90,43 +79,26 @@ public final class ListenPlayerOther implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerInteract(@NonNull PlayerInteractEvent event) {
         final Player player = event.getPlayer();
-        if ((event.getAction() == Action.RIGHT_CLICK_BLOCK) && (event.getClickedBlock() != null) && (event.getClickedBlock().getState() instanceof Container) && !this.plugin.chestFakeInUse(player.getName()) && !player.isSneaking() && this.plugin.getManager().isVanished(event.getPlayer()) && VanishPerms.canReadChestsSilently(event.getPlayer())) {
-            Container container = (Container) event.getClickedBlock().getState();
+        if ((event.getAction() == Action.RIGHT_CLICK_BLOCK) && (event.getClickedBlock() != null) && (event.getClickedBlock().getState() instanceof Container container) && !this.plugin.chestFakeInUse(player.getName()) && !player.isSneaking() && this.plugin.getManager().isVanished(event.getPlayer()) && VanishPerms.canReadChestsSilently(event.getPlayer())) {
             if (container instanceof EnderChest && this.plugin.getServer().getPluginManager().isPluginEnabled("EnderChestPlus") && VanishPerms.canNotInteract(player)) {
                 event.setCancelled(true);
                 return;
             }
-            final Block block = event.getClickedBlock();
-            Inventory inventory = null;
-            final BlockState blockState = block.getState();
-            boolean fake = false;
-            switch (block.getType()) {
-                case TRAPPED_CHEST:
-                case CHEST:
-                    final Chest chest = (Chest) blockState;
-                    inventory = this.plugin.getServer().createInventory(player, chest.getInventory().getSize());
-                    inventory.setContents(chest.getInventory().getContents());
-                    fake = true;
-                    break;
-                case ENDER_CHEST:
-                    if (this.plugin.getServer().getPluginManager().isPluginEnabled("EnderChestPlus") && VanishPerms.canNotInteract(player)) {
-                        event.setCancelled(true);
-                        return;
-                    }
-                    inventory = player.getEnderChest();
-                    break;
-            }
-            if (inventory == null && blockState instanceof Container) {
-                inventory = ((Container) blockState).getInventory();
-            }
-            if (inventory != null) {
-                event.setCancelled(true);
-                return;
-            }
+            Inventory inventory;
             if (container.getInventory() instanceof DoubleChestInventory) {
-                inventory = this.plugin.getServer().createInventory(player, 54, "Silently opened inventory");
+                if (this.plugin.isPaper()) {
+                    inventory = this.plugin.getServer().createInventory(player, 54, Component.text("Silently opened inventory"));
+                } else {
+                    //noinspection deprecation
+                    inventory = this.plugin.getServer().createInventory(player, 54, "Silently opened inventory");
+                }
             } else {
-                inventory = this.plugin.getServer().createInventory(player, container.getInventory().getType(), "Silently opened inventory");
+                if (this.plugin.isPaper()) {
+                    inventory = this.plugin.getServer().createInventory(player, container.getInventory().getType(), Component.text("Silently opened inventory"));
+                } else {
+                    //noinspection deprecation
+                    inventory = this.plugin.getServer().createInventory(player, container.getInventory().getType(), "Silently opened inventory");
+                }
             }
             inventory.setContents(container.getInventory().getContents());
             this.plugin.chestFakeOpen(player.getName());
@@ -135,7 +107,7 @@ public final class ListenPlayerOther implements Listener {
             event.setCancelled(true);
         } else if (this.plugin.getManager().isVanished(player) && VanishPerms.canNotInteract(player)) {
             event.setCancelled(true);
-        } else if ((event.getAction() == Action.PHYSICAL) && (event.getClickedBlock() != null) && XMaterial.matchAnyXMaterial(event.getClickedBlock().getType(), XMaterial.FARMLAND) && this.plugin.getManager().isVanished(player) && VanishPerms.canNotTrample(player)) {
+        } else if ((event.getAction() == Action.PHYSICAL) && (event.getClickedBlock() != null) && (event.getClickedBlock().getType() == Material.FARMLAND) && this.plugin.getManager().isVanished(player) && VanishPerms.canNotTrample(player)) {
             event.setCancelled(true);
         }
     }
