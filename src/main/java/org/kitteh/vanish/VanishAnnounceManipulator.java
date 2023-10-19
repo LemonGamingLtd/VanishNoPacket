@@ -94,7 +94,7 @@ public final class VanishAnnounceManipulator {
     }
 
     private @NonNull String injectPlayerInformation(@NonNull String message, @NonNull Player player) {
-        final VaultHook vault = (VaultHook) this.plugin.getHookManager().getHook(HookType.Vault);
+//        final VaultHook vault = (VaultHook) this.plugin.getHookManager().getHook(HookType.Vault);
         message = message.replace("%p", player.getName());
         message = message.replace("%d", player.getDisplayName());
         if (this.placeholderAPI) {

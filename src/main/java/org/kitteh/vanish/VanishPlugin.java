@@ -28,6 +28,7 @@ import org.bukkit.metadata.LazyMetadataValue.CacheStrategy;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.kitteh.vanish.hooks.Hook;
 import org.kitteh.vanish.hooks.HookManager;
 import org.kitteh.vanish.hooks.HookManager.HookType;
 import org.kitteh.vanish.listeners.ListenEntity;
@@ -258,17 +259,17 @@ public final class VanishPlugin extends JavaPlugin implements Listener {
         Settings.freshStart(this);
 
         if (this.getConfig().getBoolean("hooks.essentials", false)) {
-            this.hookManager.getHook(HookType.Essentials).onEnable();
+            this.hookManager.getHook(HookType.Essentials).ifPresent(Hook::onEnable);
         }
         if (this.getConfig().getBoolean("hooks.dynmap", false)) {
-            this.hookManager.getHook(HookType.Dynmap).onEnable();
+            this.hookManager.getHook(HookType.Dynmap).ifPresent(Hook::onEnable);
         }
         if (this.getConfig().getBoolean("hooks.discordsrv", false) && this.getServer().getPluginManager().isPluginEnabled("DiscordSRV")) {
             // Shouldn't happen here, but if the load order gets broken...
-            this.hookManager.getHook(HookType.DiscordSRV).onEnable();
+            this.hookManager.getHook(HookType.DiscordSRV).ifPresent(Hook::onEnable);
         }
         if (this.getConfig().getBoolean("hooks.squaremap", false)) {
-            this.hookManager.getHook(HookType.squaremap).onEnable();
+            this.hookManager.getHook(HookType.squaremap).ifPresent(Hook::onEnable);
         }
 
         final VanishPlugin self = this;
@@ -295,7 +296,7 @@ public final class VanishPlugin extends JavaPlugin implements Listener {
     @EventHandler
     public void onPluginEnable(PluginEnableEvent event) {
         if (event.getPlugin().getName().equalsIgnoreCase("DiscordSRV") && this.getConfig().getBoolean("hooks.discordsrv", false)) {
-            this.hookManager.getHook(HookType.DiscordSRV).onEnable();
+            this.hookManager.getHook(HookType.DiscordSRV).ifPresent(Hook::onEnable);
         }
     }
 

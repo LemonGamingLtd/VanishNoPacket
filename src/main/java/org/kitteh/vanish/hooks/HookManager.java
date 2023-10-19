@@ -33,6 +33,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public final class HookManager {
     public enum HookType {
@@ -96,11 +97,11 @@ public final class HookManager {
      * @param hooktype desired hook type
      * @return the named Hook if registered, null if no match.
      */
-    public @NonNull Hook getHook(@NonNull HookType hooktype) {
+    public @NonNull Optional<Hook> getHook(@NonNull HookType hooktype) {
         if (!this.hooks.containsKey(hooktype.name())) {
             this.registerHook(hooktype);
         }
-        return this.hooks.get(hooktype.name());
+        return Optional.ofNullable(this.hooks.get(hooktype.name()));
     }
 
     /**
