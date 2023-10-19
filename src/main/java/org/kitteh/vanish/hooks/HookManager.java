@@ -17,6 +17,7 @@
  */
 package org.kitteh.vanish.hooks;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -161,6 +162,10 @@ public final class HookManager {
      * @param hookClazz hook class to register
      */
     public void registerHook(@NonNull String name, @NonNull Class<? extends Hook> hookClazz) {
+        if (!Bukkit.getPluginManager().isPluginEnabled(name)) {
+            Debuggle.log(String.format("Cannot hook into plugin '%s' because it was not enabled at time of call!", name));
+            return;
+        }
         try {
             this.registerHook(name, hookClazz.getConstructor(VanishPlugin.class).newInstance(this.plugin));
         } catch (final Exception e) {

@@ -17,6 +17,7 @@
  */
 package org.kitteh.vanish.hooks.plugins;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.checkerframework.checker.nullness.qual.NonNull;
