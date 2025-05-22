@@ -86,10 +86,4 @@ public final class ListenEntity implements Listener {
         }
     }
 
-    @EventHandler(ignoreCancelled = true)
-    public void onVehicleEntityCollision(@NonNull VehicleEntityCollisionEvent event) {
-        if ((event.getEntity() instanceof Player) && this.plugin.getManager().isVanished((Player) event.getEntity())) {
-            event.setCancelled(true);
-        }
-    }
 }
